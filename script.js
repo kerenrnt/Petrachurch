@@ -130,33 +130,37 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // 3. INISIALISASI PLUGIN & ANIMASI
-    AOS.init({ 
-        duration: 900, 
-        once: true, 
-        offset: 50,
-        easing: 'ease-out-cubic',
-        disable: 'mobile' 
-    });
+    if (typeof AOS !== 'undefined') {
+        AOS.init({ 
+            duration: 900, 
+            once: true, 
+            offset: 50,
+            easing: 'ease-out-cubic',
+            disable: 'mobile' 
+        });
+    }
     
-    const swiper = new Swiper('.gallery-slider', {
-        slidesPerView: 1, 
-        spaceBetween: 20,
-        loop: true,
-        grabCursor: true, 
-        autoplay: {
-            delay: 3000, 
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        breakpoints: {
-            640: { slidesPerView: 2 },  
-            968: { slidesPerView: 3 },  
-            1200: { slidesPerView: 4 }  
-        }
-    });
+    if (typeof Swiper !== 'undefined' && document.querySelector('.gallery-slider')) {
+        const swiper = new Swiper('.gallery-slider', {
+            slidesPerView: 1, 
+            spaceBetween: 20,
+            loop: true,
+            grabCursor: true, 
+            autoplay: {
+                delay: 3000, 
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            breakpoints: {
+                640: { slidesPerView: 2 },  
+                968: { slidesPerView: 3 },  
+                1200: { slidesPerView: 4 }  
+            }
+        });
+    }
 
     // 4. UI INTERACTION LOGIC
     let isScrolling = false;
@@ -164,12 +168,14 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!isScrolling) {
             window.requestAnimationFrame(function() {
                 const navbar = document.querySelector('.navbar');
-                if (window.scrollY > 50) {
-                    navbar.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
-                    navbar.style.padding = '10px 5%';
-                } else {
-                    navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.05)';
-                    navbar.style.padding = '15px 5%';
+                if (navbar) {
+                    if (window.scrollY > 50) {
+                        navbar.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+                        navbar.style.padding = '10px 5%';
+                    } else {
+                        navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.05)';
+                        navbar.style.padding = '15px 5%';
+                    }
                 }
                 isScrolling = false;
             });
@@ -180,29 +186,52 @@ document.addEventListener("DOMContentLoaded", function() {
     // Mobile Menu Logic
     const menuBtn = document.getElementById('mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
-    const menuIcon = menuBtn.querySelector('i');
+    const menuIcon = menuBtn ? menuBtn.querySelector('i') : null;
     const menuOverlay = document.getElementById('menu-overlay');
 
     const toggleMenu = (forceClose = false) => {
+        if (!navLinks) return;
         const willBeActive = forceClose ? false : !navLinks.classList.contains('active');
         
         navLinks.classList.toggle('active', willBeActive);
         document.body.classList.toggle('menu-open', willBeActive);
         
-        if(willBeActive) {
-            menuIcon.classList.replace('fa-bars', 'fa-times');
-        } else {
-            menuIcon.classList.replace('fa-times', 'fa-bars');
+        if (menuIcon) {
+            if(willBeActive) {
+                menuIcon.classList.replace('fa-bars', 'fa-times');
+            } else {
+                menuIcon.classList.replace('fa-times', 'fa-bars');
+            }
         }
     };
 
-    if (menuBtn && menuOverlay && navLinks && menuIcon) {
+    if (menuBtn && menuOverlay && navLinks) {
         menuBtn.addEventListener('click', () => toggleMenu());
         menuOverlay.addEventListener('click', () => toggleMenu(true));
 
         const links = document.querySelectorAll('.nav-link');
         links.forEach(link => {
-            link.addEventListener('click', () => toggleMenu(true));
+            link.addEventListener('click', function(e) {
+                if (!this.classList.contains('dropdown-toggle')) {
+                    toggleMenu(true);
+                }
+            });
+        });
+    }
+
+    // === LOGIKA DROPDOWN NAVIGASI MOBILE (SMOOTH TOGGLE) ===
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const navDropdown = document.querySelector('.nav-dropdown');
+
+    if (dropdownToggle && navDropdown) {
+        dropdownToggle.addEventListener('click', function(e) {
+            if (window.innerWidth < 992) {
+                e.preventDefault(); 
+                navDropdown.classList.toggle('active');
+                
+                const expanded = navDropdown.classList.contains('active');
+                dropdownToggle.setAttribute('aria-expanded', expanded);
+            }
         });
     }
 
@@ -225,9 +254,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    window.addEventListener('click', function() {
+    window.addEventListener('click', function(e) {
         waDropdowns.forEach(dropdown => {
             dropdown.classList.remove('active');
         });
+
+        if (navDropdown && !navDropdown.contains(e.target)) {
+            navDropdown.classList.remove('active');
+            if(dropdownToggle) dropdownToggle.setAttribute('aria-expanded', 'false');
+        }
     });
 });
