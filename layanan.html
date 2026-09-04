@@ -7,9 +7,13 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body style="display: flex; flex-direction: column; min-height: 100vh;">
+
+    <!-- Overlay untuk Menu Mobile -->
+    <div class="menu-overlay" id="menu-overlay"></div>
 
     <header>
         <nav class="navbar" data-aos="fade-down">
@@ -33,6 +37,11 @@
                 <a href="index.html#gallery" class="nav-link">Galeri</a>
                 <a href="index.html#lokasi" class="nav-link">Lokasi</a>
             </div>
+
+            <!-- Tombol Hamburger Mobile agar Navbar Muncul di HP -->
+            <button class="menu-icon" id="mobile-menu-btn" aria-label="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
         </nav>
     </header>
 
@@ -46,7 +55,6 @@
                     <span class="service-tagline">Pelayanan Kristen Pemulihan & Pertumbuhan</span>
                     <h2 style="font-family: 'Montserrat', sans-serif; font-size: clamp(32px, 5vw, 48px); color: var(--navy); margin-top: 10px;">Layanan Jemaat</h2>
                     <div class="premium-divider"></div>
-                    <!-- Membatasi lebar teks agar rapi di tengah -->
                     <p class="service-desc" style="max-width: 600px; margin: 0 auto; color: #555; font-size: 1.1rem; line-height: 1.6;">
                         Kami rindu berjalan bersama Anda dalam setiap fase kehidupan dan pertumbuhan iman.
                     </p>
@@ -95,11 +103,13 @@
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="script.js"></script>
     <script>
         AOS.init({ 
             duration: 800,
-            once: true /* Animasi hanya berjalan sekali saat di-scroll */
+            once: true 
         });
     </script>
 </body>
