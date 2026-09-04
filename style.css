@@ -657,22 +657,3 @@ h1.welcome-label { display: inline-block; font-family: 'Montserrat', sans-serif;
     }
 }
 
-/* =========================================
-   PERBAIKAN MENU LAYANAN AGAR BISA DIBUKA DI HP
-========================================= */
-@media (max-width: 991px) {
-    /* Memaksa dropdown terbuka saat disentuh atau ditekan */
-    .nav-dropdown:hover .dropdown-menu,
-    .nav-dropdown:active .dropdown-menu,
-    .nav-dropdown:focus-within .dropdown-menu {
-        max-height: 300px;
-        padding: 5px 0;
-    }
-    
-    /* Memutar ikon panah ke atas saat menu terbuka */
-    .nav-dropdown:hover .nav-arrow,
-    .nav-dropdown:active .nav-arrow,
-    .nav-dropdown:focus-within .nav-arrow {
-        transform: translateY(2px) rotate(-135deg);
-    }
-}
